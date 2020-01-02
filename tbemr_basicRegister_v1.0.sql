@@ -464,14 +464,14 @@ SELECT
     	WHEN bpos.patient_id IS NOT NULL THEN 'Y'
     	ELSE null
     END AS "Positive Culture at Baseline",
-    bpos.closer_negative AS "Negative Result Closer Than Positive Culture at Baseline",
+    bpos.closer_negative AS "Negative Culture Closer to Baseline Than Positive Culture",
     CASE
     	WHEN icc.patient_id IS NOT NULL THEN 'Y'
     	ELSE null
     END AS "Culture Conversion (for positive at baseline only)",
-    icc.initial_cc_date AS "Initical Culture Conversion Date",
+    icc.initial_cc_date AS "Initial Culture Conversion Date",
     ROUND(((DATE_PART('day',(icc.initial_cc_date::timestamp)-(ti.tuberculosis_drug_treatment_start_date::timestamp)))/365*12)::NUMERIC,1) AS "Months to Initial Culture Conversion Date",
-    icc.revert_after_cc AS "Re-conversion after initical culture conversion",
+    icc.revert_after_cc AS "Re-conversion after Initial Culture Conversion",
     eot.eot_outcome AS "Outcome",
     eot.tuberculosis_treatment_end_date AS "End of Treatment Date",
     CASE
