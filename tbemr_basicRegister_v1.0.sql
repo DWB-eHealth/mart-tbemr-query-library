@@ -297,22 +297,24 @@ initial_cc AS (
 		SELECT
 			bcrd.patient_id AS "patient_id", 
 			bcrd.program_id AS "program_id",
-			bcs.specimen_collection_date::date AS "collection_date",
-			bcrd.bacteriology_culture_results AS "result"
+			bcs.specimen_collection_date::date AS "collection_date"
 		FROM bacteriology_culture_results_details AS bcrd
 		LEFT OUTER JOIN bacteriology_concept_set AS bcs
 			ON bcrd.id_bacteriology_concept_set = bcs.id_bacteriology_concept_set
-		WHERE bcrd.bacteriology_culture_results = 'Negative for M. tuberculosis'),
+		LEFT OUTER JOIN treatment_initiation_template AS ti
+			ON bcrd.patient_id = ti.patient_id AND bcrd.program_id = ti.program_id
+		WHERE bcrd.bacteriology_culture_results = 'Negative for M. tuberculosis' AND bcs.specimen_collection_date >= ti.tuberculosis_drug_treatment_start_date),
 	positive_results AS (
 		SELECT
 			bcrd.patient_id AS "patient_id", 
 			bcrd.program_id AS "program_id",
-			bcs.specimen_collection_date::date AS "collection_date",
-			bcrd.bacteriology_culture_results AS "result"
+			bcs.specimen_collection_date::date AS "collection_date"
 		FROM bacteriology_culture_results_details AS bcrd
 		LEFT OUTER JOIN bacteriology_concept_set AS bcs
 			ON bcrd.id_bacteriology_concept_set = bcs.id_bacteriology_concept_set
-		WHERE bcrd.bacteriology_culture_results = 'Positive for M. tuberculosis'),
+		LEFT OUTER JOIN treatment_initiation_template AS ti
+			ON bcrd.patient_id = ti.patient_id AND bcrd.program_id = ti.program_id
+		WHERE bcrd.bacteriology_culture_results = 'Positive for M. tuberculosis' AND bcs.specimen_collection_date >= ti.tuberculosis_drug_treatment_start_date),
 	cc_date AS (	
 		SELECT
 			nr.patient_id,
