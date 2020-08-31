@@ -107,37 +107,37 @@ bdq_start_date AS (
 /*SUB-TABLE: The initial_drug_regimen table indicates which drugs were started within 1 week of the treatment initiation start date.*/
 initial_drug_regimen AS (
 	SELECT
-        idr.patient_program_id,
-        MAX (CASE WHEN idr.drug = 'Isoniazid (H)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "H",
-        MAX (CASE WHEN idr.drug = 'Rifampicin (R)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "R",
-        MAX (CASE WHEN idr.drug = 'Ethambutol (E)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "E",
-        MAX (CASE WHEN idr.drug = 'Pyrazinamide (Z)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Z",
-        MAX (CASE WHEN idr.drug = 'Streptomycin (S)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "S",
-        MAX (CASE WHEN idr.drug = 'Amikacin (Am)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Am",
-        MAX (CASE WHEN idr.drug = 'Kanamycin (Km)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Km",
-        MAX (CASE WHEN idr.drug = 'Capreomycin (Cm)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Cm",
-        MAX (CASE WHEN idr.drug = 'Levofloxacin (Lfx)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Lfx",
-        MAX (CASE WHEN idr.drug = 'Moxifloxacin (Mfx)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Mfx",
-        MAX (CASE WHEN idr.drug = 'Prothionamide (Pto)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Pto",
-        MAX (CASE WHEN idr.drug = 'Ethionamide (Eto)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Eto",
-        MAX (CASE WHEN idr.drug = 'Cycloserine (Cs)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Cs",
-        MAX (CASE WHEN idr.drug = 'Terizidone (Trd)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Trd",
-        MAX (CASE WHEN idr.drug = 'Para-aminosalicylic acid (PAS)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "PAS",
-        MAX (CASE WHEN idr.drug = 'Para-aminosalicylic acid - sodium (PAS-Na)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "PAS-Na",
-        MAX (CASE WHEN idr.drug = 'Bedaquiline (Bdq)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Bdq",
-        MAX (CASE WHEN idr.drug = 'Delamanid (Dlm)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Dlm",
-        MAX (CASE WHEN idr.drug = 'Linezolid (Lzd)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Lzd",
-        MAX (CASE WHEN idr.drug = 'Clofazimine (Cfz)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Cfz",
-        MAX (CASE WHEN idr.drug = 'Imipenem/Cilastatin (Imp/Cln)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Imp/Cln",
-        MAX (CASE WHEN idr.drug = 'Amoxicillin/Clavulanate (Amx/Clv)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Amx/Clv",
-        MAX (CASE WHEN idr.drug = 'Meropenem (Mpm)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Mpm",
-        MAX (CASE WHEN idr.drug = 'Pretomanid (Pa)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Pa",
-        MAX (CASE WHEN idr.drug = 'Rifapentine (Rpt or P)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Rpt or P"
-    FROM (SELECT 
+		idr.patient_program_id,
+		MAX (CASE WHEN idr.drug = 'Isoniazid (H)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "H",
+		MAX (CASE WHEN idr.drug = 'Rifampicin (R)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "R",
+		MAX (CASE WHEN idr.drug = 'Ethambutol (E)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "E",
+		MAX (CASE WHEN idr.drug = 'Pyrazinamide (Z)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Z",
+		MAX (CASE WHEN idr.drug = 'Streptomycin (S)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "S",
+		MAX (CASE WHEN idr.drug = 'Amikacin (Am)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Am",
+		MAX (CASE WHEN idr.drug = 'Kanamycin (Km)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Km",
+		MAX (CASE WHEN idr.drug = 'Capreomycin (Cm)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Cm",
+		MAX (CASE WHEN idr.drug = 'Levofloxacin (Lfx)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Lfx",
+		MAX (CASE WHEN idr.drug = 'Moxifloxacin (Mfx)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Mfx",
+		MAX (CASE WHEN idr.drug = 'Prothionamide (Pto)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Pto",
+		MAX (CASE WHEN idr.drug = 'Ethionamide (Eto)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Eto",
+		MAX (CASE WHEN idr.drug = 'Cycloserine (Cs)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Cs",
+		MAX (CASE WHEN idr.drug = 'Terizidone (Trd)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Trd",
+		MAX (CASE WHEN idr.drug = 'Para-aminosalicylic acid (PAS)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "PAS",
+		MAX (CASE WHEN idr.drug = 'Para-aminosalicylic acid - sodium (PAS-Na)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "PAS-Na",
+		MAX (CASE WHEN idr.drug = 'Bedaquiline (Bdq)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Bdq",
+		MAX (CASE WHEN idr.drug = 'Delamanid (Dlm)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Dlm",
+		MAX (CASE WHEN idr.drug = 'Linezolid (Lzd)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Lzd",
+		MAX (CASE WHEN idr.drug = 'Clofazimine (Cfz)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Cfz",
+		MAX (CASE WHEN idr.drug = 'Imipenem/Cilastatin (Imp/Cln)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Imp/Cln",
+		MAX (CASE WHEN idr.drug = 'Amoxicillin/Clavulanate (Amx/Clv)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Amx/Clv",
+		MAX (CASE WHEN idr.drug = 'Meropenem (Mpm)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Mpm",
+		MAX (CASE WHEN idr.drug = 'Pretomanid (Pa)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Pa",
+		MAX (CASE WHEN idr.drug = 'Rifapentine (Rpt or P)' THEN concat(idr.dose,' ',idr.dose_unit) ELSE NULL END) AS "Rpt or P"
+	FROM (SELECT 
 			mdd.patient_program_id AS patient_program_id,
-	        mdd.coded_drug_name AS drug,
-	        mdd.dose AS dose,
-	        mdd.dose_units AS dose_unit
+			mdd.coded_drug_name AS drug,
+			mdd.dose AS dose,
+			mdd.dose_units AS dose_unit
 		FROM medication_data_default AS mdd
 		LEFT OUTER JOIN treatment_initiation_template AS ti
 			ON mdd.patient_id = ti.patient_id and mdd.patient_program_name = ti.program_name
@@ -147,7 +147,7 @@ initial_drug_regimen AS (
 
 /*SUB-TABLE: The latest_hiv_result table selects the most recent complete HIV results from the serology lab results form.*/
 latest_hiv_result AS (
-    SELECT 
+	SELECT 
         distinct on (lrs.patient_id, lrs.program_id) lrs.lab_hiv_test_result AS hiv_result,
         lrs.patient_id,
         lrs.program_id
@@ -502,7 +502,7 @@ LEFT OUTER JOIN initial_drug_regimen AS idr
 LEFT OUTER JOIN latest_hiv_result AS lhr 
 	ON ppv.patient_id = lhr.patient_id and ppv.program_id = lhr.program_id
 LEFT OUTER JOIN latest_hep_b_result AS lhbr 
-ON ppv.patient_id = lhbr.patient_id and ppv.program_id = lhbr.program_id
+	ON ppv.patient_id = lhbr.patient_id and ppv.program_id = lhbr.program_id
 LEFT OUTER JOIN latest_hep_c_result AS lhcr
 	ON ppv.patient_id = lhcr.patient_id and ppv.program_id = lhcr.program_id
 LEFT OUTER JOIN baseline_pos AS bpos
