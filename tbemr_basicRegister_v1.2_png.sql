@@ -479,7 +479,8 @@ SELECT
 	CASE
 		WHEN lfu.return_visit_date IS NOT NULL THEN lfu.return_visit_date
 		ELSE bl.return_visit_date
-	END AS "64_Next_Visit"
+	END AS "64_Next_Visit",
+	1 as "sum"
 FROM patient_program_view AS ppv 
 LEFT OUTER JOIN treatment_initiation_template AS ti
 	ON ppv.patient_id = ti.patient_id and ppv.program_id = ti.program_id
