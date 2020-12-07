@@ -381,6 +381,12 @@ SELECT
 		WHEN eot.tuberculosis_treatment_end_date is not null then (DATE_PART('day',(eot.tuberculosis_treatment_end_date::timestamp)-(ti.tuberculosis_drug_treatment_start_date::timestamp)))/365*12
 		ELSE (DATE_PART('day',(now()::timestamp)-(ti.tuberculosis_drug_treatment_start_date::timestamp)))/365*12
 	END)::NUMERIC,1) AS "14_Treatment_Duration_(months)",
+	CASE
+		WHEN ti.ti_type_of_treatment_regimen = 'PNG Regimen List 1' then 'Short Regimen'
+		WHEN ti.ti_type_of_treatment_regimen = 'PNG Regimen List 2' then 'Conventional Regimen without new drugs'
+		WHEN ti.ti_type_of_treatment_regimen = 'PNG Regimen List 3' then 'Regimen including new drugs'
+		ELSE ti.ti_type_of_treatment_regimen 
+	END AS "14e_Type_of_Regimen",
 	ti.ti_second_line_regimen_drug_type AS "15_Second_Line_Treatment_Type",
 	dsd.dlm_start_date::date AS "16_Start_Date_(Dlm)",
 	bsd.bdq_start_date::date AS "17_Start_Date_(Bdq)",
@@ -480,7 +486,8 @@ SELECT
 		WHEN lfu.return_visit_date IS NOT NULL THEN lfu.return_visit_date
 		ELSE bl.return_visit_date
 	END AS "64_Next_Visit",
-	1 as "sum"
+	1 as "65_background_sum",
+	'x' as "66_background_count"
 FROM patient_program_view AS ppv 
 LEFT OUTER JOIN treatment_initiation_template AS ti
 	ON ppv.patient_id = ti.patient_id and ppv.program_id = ti.program_id
