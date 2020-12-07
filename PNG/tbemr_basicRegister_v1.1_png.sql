@@ -386,7 +386,7 @@ SELECT
 		WHEN ti.ti_type_of_treatment_regimen = 'PNG Regimen List 2' then 'Conventional Regimen without new drugs'
 		WHEN ti.ti_type_of_treatment_regimen = 'PNG Regimen List 3' then 'Regimen including new drugs'
 		ELSE ti.ti_type_of_treatment_regimen 
-	END AS "14e_Type_of_Regimen",
+	END AS "15e_Type_of_Regimen",
 	ti.ti_second_line_regimen_drug_type AS "15_Second_Line_Treatment_Type",
 	dsd.dlm_start_date::date AS "16_Start_Date_(Dlm)",
 	bsd.bdq_start_date::date AS "17_Start_Date_(Bdq)",
