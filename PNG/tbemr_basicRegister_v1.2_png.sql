@@ -198,7 +198,7 @@ baseline_pos AS (
 				ON ti.patient_program_id = cp.patient_program_id
 			WHERE (cp.specimen_collection_date - ti.tuberculosis_drug_treatment_start_date) >= -90 
 			AND (cp.specimen_collection_date - ti.tuberculosis_drug_treatment_start_date) <= 15
-			ORDER BY cp.patient_id, (cp.specimen_collection_date - ti.tuberculosis_drug_treatment_start_date)),
+			ORDER BY cp.patient_program_id, (cp.specimen_collection_date - ti.tuberculosis_drug_treatment_start_date)),
 		neg_culture_baseline_fuzzy AS (
 			WITH culture_negative AS (
 				SELECT 
@@ -222,7 +222,7 @@ baseline_pos AS (
 				AND (cn.specimen_collection_date - ti.tuberculosis_drug_treatment_start_date) <= 15
 			ORDER BY cn.patient_program_id, (cn.specimen_collection_date - ti.tuberculosis_drug_treatment_start_date))	
 		SELECT
-			pcb.patient_program_id,
+			DISTINCT ON (pcb.patient_program_id) pcb.patient_program_id,
 			pcb.tuberculosis_drug_treatment_start_date,
 			pcb.specimen_collection_date AS closest_positive,
 			ncb.specimen_collection_date AS closest_negative,
@@ -271,14 +271,13 @@ initial_cc AS (
 			pcb.tuberculosis_drug_treatment_start_date,
 			pcb.specimen_collection_date AS closest_positive
 		FROM (SELECT 
-			ROW_NUMBER() OVER (PARTITION BY pcbf.patient_id, pcbf.program_id ORDER BY abs(pcbf.day_diff_pos - 0) ASC) AS pos_bl,
+			ROW_NUMBER() OVER (PARTITION BY pcbf.patient_program_id ORDER BY abs(pcbf.day_diff_pos - 0) ASC) AS pos_bl,
 			pcbf.*
 		FROM pos_culture_baseline_fuzzy AS pcbf) AS pcb
 		WHERE pcb.pos_bl = 1),
 	negative_results AS (
 		SELECT
-			bcrd.patient_id AS "patient_id", 
-			bcrd.program_id AS "program_id",
+			bcrd.patient_program_id AS "patient_program_id", 
 			bcs.specimen_collection_date::date AS "collection_date"
 		FROM bacteriology_culture_results_details AS bcrd
 		LEFT OUTER JOIN bacteriology_concept_set AS bcs
@@ -448,12 +447,12 @@ SELECT
 		ELSE null
 	END AS "55_Diabetes_Baseline",
 	CASE
-		WHEN bpos.patient_id IS NOT NULL THEN 'Y'
+		WHEN bpos.patient_program_id IS NOT NULL THEN 'Y'
 		ELSE null
 	END AS "56_Positive_Culture_at_Baseline",
 	bpos.closer_negative AS "57_Negative_Culture_Closer_to_Baseline_Than_Positive_Culture",
 	CASE
-		WHEN icc.patient_id IS NOT NULL THEN 'Y'
+		WHEN icc.patient_program_id IS NOT NULL THEN 'Y'
 		ELSE null
 	END AS "58_Culture_Conversion_(for_positive_at_baseline_only)",
 	icc.initial_cc_date AS "59_Initial_Culture_Conversion_Date",
