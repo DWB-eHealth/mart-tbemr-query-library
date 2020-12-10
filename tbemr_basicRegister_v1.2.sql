@@ -321,7 +321,7 @@ initial_cc AS (
 			END) AS pos_after_cc
 		FROM negative_results AS nr
 		INNER JOIN negative_results AS nr2
-			ON nr.patient_program_id = nr2.patient_prorgam_id AND nr.collection_date != nr2.collection_date
+			ON nr.patient_program_id = nr2.patient_program_id AND nr.collection_date != nr2.collection_date
 		LEFT OUTER JOIN positive_results AS pr
 			ON nr.patient_program_id = pr.patient_program_id
 		LEFT OUTER JOIN baseline_pos AS bp
