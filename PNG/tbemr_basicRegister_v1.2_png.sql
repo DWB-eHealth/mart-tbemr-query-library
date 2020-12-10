@@ -379,7 +379,7 @@ SELECT
 	idr."E" AS "23_Initial_Drug_E",
 	idr."Z" AS "24_Initial_Drug_Z",
 	idr."S" AS "25_Initial_Drug_S",
-	idr."Am" "26_Initial_Drug_Am",
+	idr."Am" AS "26_Initial_Drug_Am",
 	idr."Km" AS "27_Initial_Drug_Km",
 	idr."Cm" AS "28_Initial_Drug_Cm",
 	idr."Lfx" AS "29_Initial_Drug_Lfx",
