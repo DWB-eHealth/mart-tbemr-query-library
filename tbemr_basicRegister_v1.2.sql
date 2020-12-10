@@ -194,7 +194,7 @@ baseline_pos AS (
 				(cp.specimen_collection_date - ti.tuberculosis_drug_treatment_start_date) AS "day_diff_pos"
 			FROM treatment_initiation_template AS ti
 			LEFT OUTER JOIN culture_positive AS cp
-				ON ti.patient_prorgam_id = cp.patient_program_id
+				ON ti.patient_program_id = cp.patient_program_id
 			WHERE (cp.specimen_collection_date - ti.tuberculosis_drug_treatment_start_date) >= -90 
 			AND (cp.specimen_collection_date - ti.tuberculosis_drug_treatment_start_date) <= 15
 			ORDER BY cp.patient_id, (cp.specimen_collection_date - ti.tuberculosis_drug_treatment_start_date)),
