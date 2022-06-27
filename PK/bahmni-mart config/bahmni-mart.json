@@ -67,7 +67,7 @@
             "latitude",
             "longitude",
             "postal_code",
-			"cityVillage",
+	    "cityVillage",
             "address1",
             "address2",
             "address3",
