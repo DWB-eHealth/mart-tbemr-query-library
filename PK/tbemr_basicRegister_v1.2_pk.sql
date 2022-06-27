@@ -359,6 +359,8 @@ SELECT
 	bl.baseline_drug_resistance AS "11_Drug_Resistance_Profile",
 	bl.baseline_subclassification_for_confimed_drug_resistant_case AS "12_Sub-class_of_Drug_Resistance_Profile",
 	ti.tuberculosis_drug_treatment_start_date::date AS "13_Treatment_Start_Date",
+	date_part('year',ti.tuberculosis_drug_treatment_start_date::date) AS "13_Treatment_Start_Year",
+	concat(date_part('year',ti.tuberculosis_drug_treatment_start_date::date),' - Q',date_part('quarter',ti.tuberculosis_drug_treatment_start_date::date)) AS "13_Treatment_Start_Quarter",
 	ROUND((CASE 
 		WHEN eot.tuberculosis_treatment_end_date is not null then (DATE_PART('day',(eot.tuberculosis_treatment_end_date::timestamp)-(ti.tuberculosis_drug_treatment_start_date::timestamp)))/365*12
 		ELSE (DATE_PART('day',(now()::timestamp)-(ti.tuberculosis_drug_treatment_start_date::timestamp)))/365*12
