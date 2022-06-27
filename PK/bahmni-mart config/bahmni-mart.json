@@ -1,0 +1,225 @@
+{
+  "jobs": [
+    {
+      "name": "Programs",
+      "type": "programs",
+      "chunkSizeToRead": "500"
+    },
+    {
+      "name": "Patients",
+      "type": "patients",
+      "chunkSizeToRead": "500"
+    },
+    {
+      "name": "Appointments",
+      "type": "appointments",
+      "chunkSizeToRead": "500",
+      "groupedJobConfigs": [
+        {
+          "tableName": "patient_appointment_default",
+          "columnsToIgnore": [
+            "comments"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Location",
+      "type": "location",
+      "chunkSizeToRead": "500"
+    },
+    {
+      "name": "Person",
+      "type": "person",
+      "chunkSizeToRead": "500",
+      "groupedJobConfigs": [
+        {
+          "tableName": "person_attributes",
+          "columnsToIgnore": [
+            "primaryContact",
+            "secondaryContact",
+            "primaryRelative",
+            "familyNameLocal",
+            "givenNameLocal",
+            "middleNameLocal",
+            "nationalIdentificationNumber",
+            "patientAddress",
+            "patientAddressLine2",
+            "telephoneNumber"
+          ]
+        },
+        {
+          "tableName": "person_details_default",
+          "columnsToIgnore": [
+            "prefix",
+            "given_name",
+            "middle_name",
+            "family_name_prefix",
+            "family_name",
+            "family_name2",
+            "family_name_suffix",
+            "birthdate"
+          ]
+        },
+		{
+          "tableName": "person_address_default",
+          "columnsToIgnore": [
+            "latitude",
+            "longitude",
+            "postal_code",
+			"cityVillage",
+            "address1",
+            "address2",
+            "address3",
+            "address4",
+            "address5",
+            "address6",
+            "address7",
+            "address8",
+            "address9",
+            "address10",
+            "address11",
+            "address12",
+            "address13",
+            "address14",
+            "address15"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Provider",
+      "type": "provider",
+      "chunkSizeToRead": "500"
+    },
+    {
+      "name": "Visits And Encounters",
+      "type": "visitsAndEncounters",
+      "chunkSizeToRead": "500"
+    },
+    {
+      "name": "Medication And Orders",
+      "type": "medicationAndOrders",
+      "chunkSizeToRead": "500",
+      "groupedJobConfigs": [
+        {
+          "tableName": "medication_data_default",
+          "columnsToIgnore": [
+            "instructions",
+            "stop_notes",
+            "additional_instructions"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Diagnoses And Conditions",
+      "type": "diagnosesAndConditions",
+      "chunkSizeToRead": "500",
+	  "groupedJobConfigs": [
+        {
+          "tableName": "conditions_default",
+          "columnsToIgnore": [
+            "additional_detail"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bacteriology Data",
+      "conceptReferenceSource": "",
+      "type": "bacteriology",
+	  "ignoreAllFreeTextConcepts": true,
+      "includeFreeTextConceptNames": [],
+      "columnsToIgnore": [
+        "Image",
+        "Video"
+      ]
+    },
+    {
+      "name": "MetaData Dictionary",
+      "type": "metadata",
+      "conceptReferenceSource": ""
+    },
+    {
+      "name": "Obs Data",
+      "type": "obs",
+      "incrementalUpdateConfig": {
+        "updateOn": "encounter_id",
+        "eventCategory": "Encounter",
+        "openmrsTableName": "encounter"
+      },
+      "separateTableConfig": {
+        "enableForAddMoreAndMultiSelect": true,
+        "separateTables": [
+
+        ]
+      },
+      "conceptReferenceSource": "",
+      "ignoreAllFreeTextConcepts": true,
+      "columnsToIgnore": [
+        "Image",
+        "Video"
+      ],
+      "includeFreeTextConceptNames": [
+        "Other treatment facility name"
+      ]
+    },
+    {
+      "name": "Disposition Data",
+      "type": "disposition",
+      "columnsToIgnore": [
+
+      ],
+      "incrementalUpdateConfig": {
+        "updateOn": "encounter_id",
+        "eventCategory": "Encounter",
+        "openmrsTableName": "encounter"
+      }
+    }
+  ],
+  "procedures": [
+    {
+      "name": "Discharge Date Procedure",
+      "sourceFilePath": "classpath:procedureSql/dischargeDateProc.sql"
+    },
+    {
+      "name": "Age Group Procedure",
+      "sourceFilePath": "classpath:procedureSql/ageGroupProc.sql"
+    }
+  ],
+  "views": [
+    {
+      "name": "patient_program_view",
+      "sourceFilePath": "classpath:viewSql/patientProgramView.sql"
+    },
+    {
+      "name": "patient_visits_encounters_view",
+      "sourceFilePath": "classpath:viewSql/patientVisitsEncountersView.sql"
+    },
+    {
+      "name": "patient_details_view",
+      "sourceFilePath": "classpath:viewSql/patientDetailsView.sql"
+    },
+    {
+      "name": "patient_information_view",
+      "sourceFilePath": "classpath:viewSql/patientInformationView.sql"
+    },
+    {
+      "name": "patient_program_medication_view",
+      "sourceFilePath": "classpath:viewSql/patientProgramMedicationView.sql"
+    },
+    {
+      "name": "patient_diagnosis_condition_view",
+      "sourceFilePath": "classpath:viewSql/patientDiagnosisConditionView.sql"
+    },
+    {
+      "name": "patient_appointment_view",
+      "sourceFilePath": "classpath:viewSql/patientAppointmentView.sql"
+    },
+    {
+      "name": "appointment_admin_panel_view",
+      "sql": "SELECT * FROM appointment_service_default LEFT OUTER JOIN service_availability_default USING (appointment_service_id, service_name)"
+    }
+  ]
+}
