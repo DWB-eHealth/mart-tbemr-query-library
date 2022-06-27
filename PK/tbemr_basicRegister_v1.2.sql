@@ -15,6 +15,7 @@ WITH baseline_disease_site_agg AS (
 	FROM baseline_disease_site AS blds
 	GROUP BY blds.patient_program_id, blds.id_baseline_template),
 
+/*PK: Revised sub-table. Concept name changed in form and concept to collect name of other facility removed.*/
 /*SUB-TABLE: The last_facility table extracts the last facility the patient was seeen in from the treatment initiation form, follow up form and hospital admission notification form. If there is not facility in those forms, the registration facility is used.*/
 last_facility AS (
 	WITH last_facility_sub AS (
@@ -30,12 +31,14 @@ last_facility AS (
 			SELECT
 				DISTINCT on (hant.patient_program_id) hant.patient_program_id, 
 				hant.han_hospital_admission_date::date AS facility_date,
-				CASE
+				/*CASE
 					WHEN hant.treatment_facility_name != 'Other' THEN hant.treatment_facility_name
 					ELSE hant.other_treatment_facility_name
-				END AS facility
+				END AS facility*/
+				hant.han_hospital_name AS facility
 			FROM hospital_admission_notification_template AS hant
-			WHERE hant.treatment_facility_name is not null
+			/*WHERE hant.treatment_facility_name is not NULL*/
+			WHERE hant.han_hospital_name is not null
 			ORDER BY hant.patient_program_id, hant.han_hospital_admission_date DESC),
 		followup_facility AS (
 			SELECT
@@ -165,14 +168,15 @@ latest_hep_c_result AS (
     WHERE lrs.lab_hepatitis_c_antibody_test_result is not NULL
     ORDER BY lrs.patient_program_id, lrs.specimen_collection_date),
 
+/*PK: Removed sub-table, not colected.*/
 /*SUB-TABLE: The latest_followup table provides the next planned visit date from the most recent follow-up form.*/  
-latest_followup AS (
+/*latest_followup AS (
     SELECT 
         DISTINCT ON (patient_program_id) patient_program_id,
         return_visit_date
     FROM followup_template
     GROUP by patient_program_id, return_visit_date, followup_visit_date
-    ORDER by patient_program_id, followup_visit_date),
+    ORDER by patient_program_id, followup_visit_date),*/
 
 /*SUB-TABLE: The baseline_positive table provides a list of patients who have a positive result reported 3 months prior to or 2 weeks after the treatement initiation date.*/
 baseline_pos AS (
@@ -339,6 +343,7 @@ initial_cc AS (
 	WHERE cd.pos_between = 0 AND cd.pos_baseline != 0 AND cd.cc_after_pos != 0
 	ORDER BY cd.patient_program_id, cd.collection_date1)
 
+/*PK: removed next visit date. Not collected.*/
 /*Below is the main data table with all basic register variables. Only patients enrolled into a TB program and have a treatment start date documented on the treatment initiation form are part of the register.*/
 SELECT
 	pa."Registration_Number" AS "01_Registration_Number",
@@ -453,12 +458,12 @@ SELECT
 	icc.revert_after_cc AS "61_Reconversion_after_Initial_Culture_Conversion",
 	eot.eot_outcome AS "62_Outcome",
 	eot.tuberculosis_treatment_end_date AS "63_End_of_Treatment_Date",
-	CASE
+	/*CASE
 		WHEN lfu.return_visit_date IS NOT NULL THEN lfu.return_visit_date
 		ELSE bl.return_visit_date
-	END AS "64_Next_Visit",
-	1 as "65_background_sum",
-	'x' as "66_background_count"
+	END AS "64_Next_Visit",*/
+	1 as "64_background_sum",
+	'x' as "65_background_count"
 FROM patient_program_view AS ppv 
 LEFT OUTER JOIN treatment_initiation_template AS ti
 	ON ppv.patient_program_id = ti.patient_program_id
@@ -490,7 +495,7 @@ LEFT OUTER JOIN initial_cc AS icc
 	ON ppv.patient_program_id = icc.patient_program_id
 LEFT OUTER JOIN outcome_end_of_treatment_template AS eot
 	ON ppv.patient_program_id = eot.patient_program_id
-LEFT OUTER JOIN latest_followup AS lfu
-	ON ppv.patient_program_id = lfu.patient_program_id
+/*LEFT OUTER JOIN latest_followup AS lfu
+	ON ppv.patient_program_id = lfu.patient_program_id*/
 WHERE ti.tuberculosis_drug_treatment_start_date IS NOT NULL
 ORDER BY pi.patient_id
