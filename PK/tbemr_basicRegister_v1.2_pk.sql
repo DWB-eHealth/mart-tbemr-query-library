@@ -460,12 +460,16 @@ SELECT
 	icc.revert_after_cc AS "61_Reconversion_after_Initial_Culture_Conversion",
 	eot.eot_outcome AS "62_Outcome",
 	eot.tuberculosis_treatment_end_date AS "63_End_of_Treatment_Date",
+	CASE
+		WHEN eot.tuberculosis_treatment_end_date IS NULL THEN 'Yes'
+		ELSE null
+	END AS "64_Active_Treatment",	
 	/*CASE
 		WHEN lfu.return_visit_date IS NOT NULL THEN lfu.return_visit_date
 		ELSE bl.return_visit_date
 	END AS "64_Next_Visit",*/
-	1 as "64_background_sum",
-	'x' as "65_background_count"
+	1 as "99_background_sum",
+	'x' as "99_background_count"
 FROM patient_program_view AS ppv 
 LEFT OUTER JOIN treatment_initiation_template AS ti
 	ON ppv.patient_program_id = ti.patient_program_id
