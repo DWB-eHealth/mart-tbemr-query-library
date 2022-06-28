@@ -220,6 +220,10 @@
     {
       "name": "appointment_admin_panel_view",
       "sql": "SELECT * FROM appointment_service_default LEFT OUTER JOIN service_availability_default USING (appointment_service_id, service_name)"
+    },
+    {
+      "name": "basic_tbemr_register_view",
+      "sourceFilePath": "file:/home/bahmni/viewSql/tbemr_basicRegister_v1.2_pk.sql"
     }
   ]
 }
