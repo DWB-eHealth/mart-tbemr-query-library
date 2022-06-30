@@ -459,14 +459,14 @@ SELECT
 		ELSE null
 	END AS "63_Culture_Conversion_(for_positive_at_baseline_only)",
 	icc.initial_cc_date AS "64_Initial_Culture_Conversion_Date",
-	ROUND(((DATE_PART('day',(icc.initial_cc_date::timestamp)-(ti.tuberculosis_drug_treatment_start_date::timestamp)))/365*12)::NUMERIC,1) AS "60_Months_to_Initial_Culture_Conversion",
-	icc.revert_after_cc AS "65_Reconversion_after_Initial_Culture_Conversion",
-	eot.eot_outcome AS "66_Outcome",
-	eot.tuberculosis_treatment_end_date AS "67_End_of_Treatment_Date",
+	ROUND(((DATE_PART('day',(icc.initial_cc_date::timestamp)-(ti.tuberculosis_drug_treatment_start_date::timestamp)))/365*12)::NUMERIC,1) AS "65_Months_to_Initial_Culture_Conversion",
+	icc.revert_after_cc AS "66_Reconversion_after_Initial_Culture_Conversion",
+	eot.eot_outcome AS "67_Outcome",
+	eot.tuberculosis_treatment_end_date AS "68_End_of_Treatment_Date",
 	CASE
 		WHEN eot.tuberculosis_treatment_end_date IS NULL THEN 'Yes'
 		ELSE null
-	END AS "68_Active_Treatment",	
+	END AS "69_Active_Treatment",	
 	/*CASE
 		WHEN lfu.return_visit_date IS NOT NULL THEN lfu.return_visit_date
 		ELSE bl.return_visit_date
