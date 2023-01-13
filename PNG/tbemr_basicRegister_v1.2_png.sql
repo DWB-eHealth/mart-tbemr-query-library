@@ -345,6 +345,7 @@ SELECT
 	pa."Registration_Number" AS "01_Registration_Number",
 	ppv.program_name AS "02_Register",
 	pi."Patient_Identifier" AS "03_EMR_ID",
+	pta."patientDistrict" AS "031_District",
 	ppv.gender AS "04_Sex",
 	ppv.age_at_program AS "05_Age_at_Registration",
 	ppv.age_group_at_program AS "06_Age_Group_at_Registration",
@@ -355,6 +356,8 @@ SELECT
 	bl.baseline_drug_resistance AS "11_Drug_Resistance_Profile",
 	bl.baseline_subclassification_for_confimed_drug_resistant_case AS "12_Sub-class_of_Drug_Resistance_Profile",
 	ti.tuberculosis_drug_treatment_start_date::date AS "13_Treatment_Start_Date",
+	date_part('year',ti.tuberculosis_drug_treatment_start_date::date) AS "131_Treatment_Start_Year",
+	concat(date_part('year',ti.tuberculosis_drug_treatment_start_date::date),' - Q',date_part('quarter',ti.tuberculosis_drug_treatment_start_date::date)) AS "132_Treatment_Start_Quarter",
 	ROUND((CASE 
 		WHEN eot.tuberculosis_treatment_end_date is not null then (DATE_PART('day',(eot.tuberculosis_treatment_end_date::timestamp)-(ti.tuberculosis_drug_treatment_start_date::timestamp)))/365*12
 		ELSE (DATE_PART('day',(now()::timestamp)-(ti.tuberculosis_drug_treatment_start_date::timestamp)))/365*12
@@ -464,6 +467,10 @@ SELECT
 		WHEN lfu.return_visit_date IS NOT NULL THEN lfu.return_visit_date
 		ELSE bl.return_visit_date
 	END AS "64_Next_Visit",
+	CASE
+		WHEN eot.tuberculosis_treatment_end_date IS NULL THEN 'Yes'
+		ELSE null
+	END AS "65_Active_Treatment",	
 	1 as "65_background_sum",
 	'x' as "66_background_count"
 FROM patient_program_view AS ppv 
@@ -471,6 +478,8 @@ LEFT OUTER JOIN treatment_initiation_template AS ti
 	ON ppv.patient_program_id = ti.patient_program_id
 LEFT OUTER JOIN patient_identifier AS pi
 	ON ppv.patient_id = pi.patient_id
+LEFT OUTER JOIN person_attributes AS pta
+	ON ppv.patient_id = pta.person_id
 LEFT OUTER JOIN program_attributes AS pa
 	ON ppv.patient_program_id = pa.patient_program_id
 LEFT OUTER JOIN baseline_template AS bl
