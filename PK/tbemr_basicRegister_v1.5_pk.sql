@@ -471,6 +471,8 @@ SELECT
 		WHEN lfu.return_visit_date IS NOT NULL THEN lfu.return_visit_date
 		ELSE bl.return_visit_date
 	END AS "64_Next_Visit",*/
+	ppv.patient_id AS "99_patient_id",
+	ppv.patient_program_id AS "99_patient_program_id",
 	1 as "99_background_sum",
 	'x' as "99_background_count"
 FROM patient_program_view AS ppv 
