@@ -341,59 +341,64 @@ initial_cc AS (
 
 /*Below is the main data table with all basic register variables. Only patients enrolled into a TB program and have a treatment start date documented on the treatment initiation form are part of the register.*/
 SELECT
-	pa."Registration_Number" AS "01_Registration_Number",
-	ppv.program_name AS "02_Register",
-	pi."Patient_Identifier" AS "03_EMR_ID",
-	ppv.gender AS "04_Sex",
-	ppv.age_at_program AS "05_Age_at_Registration",
-	ppv.age_group_at_program AS "06_Age_Group_at_Registration",
-	bl.baseline_who_registration_group AS "07_WHO_Registration_Group",
-	bl.category_iv_tuberculosis_classification AS "08_History_of_Previously_Treated",
-	blds.disease_site AS "09_Baseline_Disease_Site",
-	bl.baseline_mdr_tb_diagnosis_method AS "10_MTB_Confirmed",
-	bl.baseline_drug_resistance AS "11_Drug_Resistance_Profile",
-	bl.baseline_subclassification_for_confimed_drug_resistant_case AS "12_Sub-class_of_Drug_Resistance_Profile",
-	ti.tuberculosis_drug_treatment_start_date::date AS "13_Treatment_Start_Date",
+	pa."Registration_Number",
+	ppv.program_name AS "Register",
+	pi."Patient_Identifier" AS "EMR_ID",
+	ppv.gender AS "Sex",
+	ppv.age_at_program AS "Age_at_Registration",
+	ppv.age_group_at_program AS "Age_Group_at_Registration",
+	bl.baseline_who_registration_group AS "WHO_Registration_Group",
+	bl.category_iv_tuberculosis_classification AS "History_of_Previously_Treated",
+	blds.disease_site AS "Baseline_Disease_Site",
+	bl.baseline_mdr_tb_diagnosis_method AS "MTB_Confirmed",
+	bl.baseline_drug_resistance AS "Drug_Resistance_Profile",
+	bl.baseline_subclassification_for_confimed_drug_resistant_case AS "Sub-class_of_Drug_Resistance_Profile",
+	ti.tuberculosis_drug_treatment_start_date::date AS "Treatment_Start_Date",
+	date_part('year',ti.tuberculosis_drug_treatment_start_date::date) AS "Treatment_Start_Year",
+	concat(date_part('year',ti.tuberculosis_drug_treatment_start_date::date),' - Q',date_part('quarter',ti.tuberculosis_drug_treatment_start_date::date)) AS "Treatment_Start_Quarter",
 	ROUND((CASE 
 		WHEN eot.tuberculosis_treatment_end_date is not null then (DATE_PART('day',(eot.tuberculosis_treatment_end_date::timestamp)-(ti.tuberculosis_drug_treatment_start_date::timestamp)))/365*12
 		ELSE (DATE_PART('day',(now()::timestamp)-(ti.tuberculosis_drug_treatment_start_date::timestamp)))/365*12
-	END)::NUMERIC,1) AS "14_Treatment_Duration_(months)",
-	ti.ti_second_line_regimen_drug_type AS "15_Second_Line_Treatment_Type",
-	dsd.dlm_start_date::date AS "16_Start_Date_(Dlm)",
-	bsd.bdq_start_date::date AS "17_Start_Date_(Bdq)",
-	LEAST(dsd.dlm_start_date,bsd.bdq_start_date)::date AS "18_Start_Date_(Dlm_or_Bdq)",
+	END)::NUMERIC,1) AS "Treatment_Duration_(months)",
+	bl.baseline_date_of_baseline AS "Clinic_Enrollment_Date",
+	date_part('year',bl.baseline_date_of_baseline::date) AS "Clinic_Enrollment_Year",
+	concat(date_part('year',bl.baseline_date_of_baseline::date),' - Q',date_part('quarter',bl.baseline_date_of_baseline::date)) AS "Clinic_Enrollment_Quarter",
+	ti.ti_second_line_regimen_drug_type AS "Second_Line_Treatment_Type",
+	dsd.dlm_start_date::date AS "Start_Date_(Dlm)",
+	bsd.bdq_start_date::date AS "Start_Date_(Bdq)",
+	LEAST(dsd.dlm_start_date,bsd.bdq_start_date)::date AS "Start_Date_(Dlm_or_Bdq)",
 	CASE
 		WHEN dsd.dlm_start_date BETWEEN (bsd.bdq_start_date::date - 7) AND (bsd.bdq_start_date::date + 7) THEN LEAST(dsd.dlm_start_date,bsd.bdq_start_date)::date
 		ELSE null
-	END AS "19_Start_Date_(Dlm_and_Bdq)",
-	lf.last_facility AS "20_Last_Facility",
-	idr."H" AS "21_Initial_Drug_H",
-	idr."R" AS "22_Initial_Drug_R",
-	idr."E" AS "23_Initial_Drug_E",
-	idr."Z" AS "24_Initial_Drug_Z",
-	idr."S" AS "25_Initial_Drug_S",
-	idr."Am" AS "26_Initial_Drug_Am",
-	idr."Km" AS "27_Initial_Drug_Km",
-	idr."Cm" AS "28_Initial_Drug_Cm",
-	idr."Lfx" AS "29_Initial_Drug_Lfx",
-	idr."Mfx" AS "30_Initial_Drug_Mfx",
-	idr."Pto" AS "31_Initial_Drug_Pto",
-	idr."Eto" AS "32_Initial_Drug_Eto",
-	idr."Cs" AS "33_Initial_Drug_Cs",
-	idr."Trd" AS "34_Initial_Drug_Trd",
-	idr."PAS" AS "35_Initial_Drug_PAS",
-	idr."PAS-Na" AS "36_Initial_Drug_PAS-Na",
-	idr."Bdq" AS "37_Initial_Drug_Bdq",
-	idr."Dlm" AS "38_Initial_Drug_Dlm",
-	idr."Lzd" AS "39_Initial_Drug_Lzd",
-	idr."Cfz" AS "40_Initial_Drug_Cfz",
-	idr."Imp/Cln" AS "41_Initial_Drug_Imp/Clm",
-	idr."Amx/Clv" AS "42_Initial_Drug_Amx/Clv",
-	idr."Mpm" AS "43_Initial_Drug_Mpm",
-	idr."Pa" AS "44_Initial_Drug_Pa",
-	idr."Rpt or P" AS "45_Initial_Drug_Rpt_or_P",
-	bl.baseline_hiv_serostatus_result AS "46_HIV_Baseline",
-	lhr.hiv_result AS "47_HIV_Lab",
+	END AS "Start_Date_(Dlm_and_Bdq)",
+	lf.last_facility AS "Last_Facility",
+	idr."H" AS "Initial_Drug_H",
+	idr."R" AS "Initial_Drug_R",
+	idr."E" AS "Initial_Drug_E",
+	idr."Z" AS "Initial_Drug_Z",
+	idr."S" AS "Initial_Drug_S",
+	idr."Am" AS "Initial_Drug_Am",
+	idr."Km" AS "Initial_Drug_Km",
+	idr."Cm" AS "Initial_Drug_Cm",
+	idr."Lfx" AS "Initial_Drug_Lfx",
+	idr."Mfx" AS "Initial_Drug_Mfx",
+	idr."Pto" AS "Initial_Drug_Pto",
+	idr."Eto" AS "Initial_Drug_Eto",
+	idr."Cs" AS "Initial_Drug_Cs",
+	idr."Trd" AS "Initial_Drug_Trd",
+	idr."PAS" AS "Initial_Drug_PAS",
+	idr."PAS-Na" AS "Initial_Drug_PAS-Na",
+	idr."Bdq" AS "Initial_Drug_Bdq",
+	idr."Dlm" AS "Initial_Drug_Dlm",
+	idr."Lzd" AS "Initial_Drug_Lzd",
+	idr."Cfz" AS "Initial_Drug_Cfz",
+	idr."Imp/Cln" AS "Initial_Drug_Imp/Clm",
+	idr."Amx/Clv" AS "Initial_Drug_Amx/Clv",
+	idr."Mpm" AS "Initial_Drug_Mpm",
+	idr."Pa" AS "Initial_Drug_Pa",
+	idr."Rpt or P" AS "Initial_Drug_Rpt_or_P",
+	bl.baseline_hiv_serostatus_result AS "HIV_Baseline",
+	lhr.hiv_result AS "HIV_Lab",
 	CASE
 		WHEN lhr.hiv_result =  'Positive' THEN 'HIV Positive'
 		WHEN lhr.hiv_result = 'Negative' THEN 'HIV Negative'
@@ -402,14 +407,14 @@ SELECT
 			WHEN bl.baseline_hiv_serostatus_result = 'Negative' THEN 'HIV Negative'
 			ELSE null
 		END)
-	END AS "48_HIV_Status",
+	END AS "HIV_Status",
 	CASE
 		WHEN bl.baseline_hepatitis_b = 'False' THEN 'Negative'
 		WHEN bl.baseline_hepatitis_b = 'True' THEN 'Positive'
 		WHEN bl.baseline_hepatitis_b = 'Unknown' THEN 'Unknown'
 		ELSE null
-	END AS "49_Hep_B_Baseline",
-	lhbr.hep_b_result AS "50_Hep_B_Lab",
+	END AS "Hep_B_Baseline",
+	lhbr.hep_b_result AS "Hep_B_Lab",
 	CASE
 		WHEN lhbr.hep_b_result = 'Non-reactive' THEN 'Hep B Negative'
 		WHEN lhbr.hep_b_result = 'Reactive' THEN 'Hep B Positive'
@@ -418,13 +423,13 @@ SELECT
 			WHEN bl.baseline_hepatitis_b = 'False' THEN 'Hep B Negative'
 			ELSE null
 		END)
-	END AS "51_Hep_B_Status",
+	END AS "Hep_B_Status",
 	CASE
 		WHEN bl.baseline_hepatitis_c = 'True' THEN 'Positive'
 		WHEN bl.baseline_hepatitis_c = 'False'THEN 'Negative'
 		ELSE null
-	END AS "52_Hep_C_Baseline",
-	lhcr.hep_c_result AS "53_Hep_C_Lab",
+	END AS "Hep_C_Baseline",
+	lhcr.hep_c_result AS "Hep_C_Lab",
 	CASE
 		WHEN lhcr.hep_c_result = 'Non-reactive' THEN 'Hep C Negative'
 		WHEN lhcr.hep_c_result = 'Reactive' THEN 'Hep C Positive'
@@ -433,32 +438,34 @@ SELECT
 			WHEN bl.baseline_hepatitis_c = 'False' THEN 'Hep C Negative'
 			ELSE null
 		END)
-	END AS "54_Hep_C_Status",
+	END AS "Hep_C_Status",
 	CASE
 		WHEN bl.diabetes_mellitus = 'False' THEN 'Negative'
 		WHEN bl.diabetes_mellitus = 'True' THEN 'Positive'
 		ELSE null
-	END AS "55_Diabetes_Baseline",
+	END AS "Diabetes_Baseline",
 	CASE
 		WHEN bpos.patient_program_id IS NOT NULL THEN 'Y'
 		ELSE null
-	END AS "56_Positive_Culture_at_Baseline",
-	bpos.closer_negative AS "57_Negative_Culture_Closer_to_Baseline_Than_Positive_Culture",
+	END AS "Positive_Culture_at_Baseline",
+	bpos.closer_negative AS "Negative_Culture_Closer_to_Baseline_Than_Positive_Culture",
 	CASE
 		WHEN icc.patient_program_id IS NOT NULL THEN 'Y'
 		ELSE null
-	END AS "58_Culture_Conversion_(for_positive_at_baseline_only)",
-	icc.initial_cc_date AS "59_Initial_Culture_Conversion_Date",
-	ROUND(((DATE_PART('day',(icc.initial_cc_date::timestamp)-(ti.tuberculosis_drug_treatment_start_date::timestamp)))/365*12)::NUMERIC,1) AS "60_Months_to_Initial_Culture_Conversion",
-	icc.revert_after_cc AS "61_Reconversion_after_Initial_Culture_Conversion",
-	eot.eot_outcome AS "62_Outcome",
-	eot.tuberculosis_treatment_end_date AS "63_End_of_Treatment_Date",
+	END AS "Culture_Conversion_(for_positive_at_baseline_only)",
+	icc.initial_cc_date AS "Initial_Culture_Conversion_Date",
+	ROUND(((DATE_PART('day',(icc.initial_cc_date::timestamp)-(ti.tuberculosis_drug_treatment_start_date::timestamp)))/365*12)::NUMERIC,1) AS "Months_to_Initial_Culture_Conversion",
+	icc.revert_after_cc AS "Reconversion_after_Initial_Culture_Conversion",
+	eot.eot_outcome AS "Outcome",
+	eot.tuberculosis_treatment_end_date AS "End_of_Treatment_Date",
 	CASE
 		WHEN lfu.return_visit_date IS NOT NULL THEN lfu.return_visit_date
 		ELSE bl.return_visit_date
-	END AS "64_Next_Visit",
-	1 as "65_background_sum",
-	'x' as "66_background_count"
+	END AS "Next_Visit",
+	ppv.patient_id,
+	ppv.patient_program_id,
+	1 as background_sum,
+	'x' as background_count
 FROM patient_program_view AS ppv 
 LEFT OUTER JOIN treatment_initiation_template AS ti
 	ON ppv.patient_program_id = ti.patient_program_id
