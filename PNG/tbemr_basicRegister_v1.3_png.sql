@@ -470,7 +470,9 @@ SELECT
 	CASE
 		WHEN eot.tuberculosis_treatment_end_date IS NULL THEN 'Yes'
 		ELSE null
-	END AS "69_Active_Treatment",	
+	END AS "69_Active_Treatment",
+	ppv.patient_id AS "99_patient_program_id",
+	ppv.patient_program_id AS "99_patient_program_ID",
 	1 as "99_background_sum",
 	'x' as "99_background_count"
 FROM patient_program_view AS ppv 
@@ -508,5 +510,5 @@ LEFT OUTER JOIN outcome_end_of_treatment_template AS eot
 	ON ppv.patient_program_id = eot.patient_program_id
 LEFT OUTER JOIN latest_followup AS lfu
 	ON ppv.patient_program_id = lfu.patient_program_id
-WHERE ti.tuberculosis_drug_treatment_start_date IS NOT NULL
+WHERE ti.tuberculosis_drug_treatment_start_date IS NOT NULL AND ppv.patient_program_voided = 'false'
 ORDER BY pi.patient_id
