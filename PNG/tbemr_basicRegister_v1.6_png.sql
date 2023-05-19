@@ -471,8 +471,8 @@ SELECT
 		WHEN eot.tuberculosis_treatment_end_date IS NULL THEN 'Yes'
 		ELSE null
 	END AS "69_Active_Treatment",
-	ppv.patient_id AS "99_patient_program_id",
-	ppv.patient_program_id AS "99_patient_program_ID",
+	ppv.patient_id AS "99_patient_id",
+	ppv.patient_program_id AS "99_patient_program_id",
 	1 as "99_background_sum",
 	'x' as "99_background_count"
 FROM patient_program_view AS ppv 
